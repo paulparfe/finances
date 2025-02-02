@@ -2,15 +2,29 @@ package main
 
 import (
 	"database/sql"
+	"flag"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"github.com/paulparfe/finances/internal/adapters/db/postgres"
 	"github.com/paulparfe/finances/internal/controller/http/v1"
 	"github.com/paulparfe/finances/internal/domain/service"
 	transactionusecase "github.com/paulparfe/finances/internal/domain/usecase/transaction"
 	userusecase "github.com/paulparfe/finances/internal/domain/usecase/user"
+	"os"
 )
 
+type config struct {
+	port string
+}
+
 func main() {
+
+	godotenv.Load(".env", ".env.example")
+
+	var cfg config
+	flag.StringVar(&cfg.port, "PORT", os.Getenv("PORT"), "API server port")
+
+	flag.Parse()
 
 	db := &sql.DB{}
 
@@ -27,5 +41,5 @@ func main() {
 	router := gin.Default()
 	transactionHandler.Register(router)
 	userHandler.Register(router)
-	router.Run(":8080")
+	router.Run(cfg.port)
 }
