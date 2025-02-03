@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"flag"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/paulparfe/finances/internal/adapters/db/postgres"
@@ -10,6 +9,7 @@ import (
 	"github.com/paulparfe/finances/internal/domain/service"
 	transactionusecase "github.com/paulparfe/finances/internal/domain/usecase/transaction"
 	userusecase "github.com/paulparfe/finances/internal/domain/usecase/user"
+	"log"
 	"os"
 )
 
@@ -19,12 +19,13 @@ type config struct {
 
 func main() {
 
-	godotenv.Load(".env", ".env.example")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	var cfg config
-	flag.StringVar(&cfg.port, "PORT", os.Getenv("PORT"), "API server port")
-
-	flag.Parse()
+	cfg.port = os.Getenv("PORT")
 
 	db := &sql.DB{}
 
