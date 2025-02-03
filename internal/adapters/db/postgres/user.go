@@ -1,18 +1,18 @@
 package postgres
 
 import (
-	"database/sql"
 	"github.com/paulparfe/finances/internal/domain/entity"
 	userusecase "github.com/paulparfe/finances/internal/domain/usecase/user"
+	"github.com/paulparfe/finances/pkg/client/postgresql"
 )
 
 type userStorage struct {
-	db *sql.DB
+	client postgresql.Client
 }
 
-func NewUserStorage(db *sql.DB) userStorage {
+func NewUserStorage(client postgresql.Client) userStorage {
 	return userStorage{
-		db: db,
+		client: client,
 	}
 }
 

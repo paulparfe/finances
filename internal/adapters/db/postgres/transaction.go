@@ -1,17 +1,17 @@
 package postgres
 
 import (
-	"database/sql"
 	"github.com/paulparfe/finances/internal/domain/entity"
+	"github.com/paulparfe/finances/pkg/client/postgresql"
 )
 
 type transactionStorage struct {
-	db *sql.DB
+	client postgresql.Client
 }
 
-func NewTransactionStorage(db *sql.DB) transactionStorage {
+func NewTransactionStorage(client postgresql.Client) transactionStorage {
 	return transactionStorage{
-		db: db,
+		client: client,
 	}
 }
 
