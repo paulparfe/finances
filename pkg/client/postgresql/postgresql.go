@@ -26,7 +26,7 @@ type TmpDBConfig struct {
 }
 
 func NewClient(ctx context.Context, retries int, delay time.Duration, cfg TmpDBConfig) (*pgxpool.Pool, error) {
-	connString := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Database)
+	connString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Database)
 	var err error
 
 	for i := 0; i < retries; i++ {
