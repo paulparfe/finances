@@ -48,8 +48,8 @@ func (u *userHandler) Deposit(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "Invalid request"})
 		return
 	}
-	if controllerDTO.Amount <= 0 {
-		c.JSON(400, gin.H{"error": "UserID should be greater than zero"})
+	if controllerDTO.Amount.Sign() <= 0 {
+		c.JSON(400, gin.H{"error": "Amount should be greater than zero"})
 		return
 	}
 
