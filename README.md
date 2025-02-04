@@ -52,7 +52,8 @@ http://localhost:8080/users/1/transactions
 
 - Refill Adam's account for 12.34
 ```shell
-curl -X POST http://localhost:8080/users/1/deposit -H "Content-Type: application/json" -d "{\"amount\": 12.34}"
+$ curl -X POST http://localhost:8080/users/1/deposit -H "Content-Type: application/json" -d "{\"amount\": 12.34}"
+{"data":{"id":1,"name":"Adam","balance":"123.45"}}
 ```
 
 The new values will be as follows:
@@ -68,3 +69,22 @@ The new values will be as follows:
 | 2  | 1       | 2            | 12.34  | transfer         | 2025-02-04 12:12:12 |
 | 3  | 1       | NULL         | 12.34  | deposit          | 2025-02-04 13:13:13 |
 
+
+- Diana is transferring 12.33 to Adam 
+```shell
+curl -X POST http://localhost:8080/users/2/transfer -H "Content-Type: application/json" -d "{\"recipient_user_id\": 1,\"amount\": 12.33}"
+{"data":{"id":2,"name":"Diana","balance":"0.01"}}
+```
+The new values will be as follows:
+
+| id  | name  | balance |
+|-----|-------|---------|
+| 1   | Adam  | 135.78  |
+| 2   | Diana | 0.01    |
+
+| id | user_id | recipient_id | amount | transaction_type | created_at          |
+|----|---------|--------------|--------|------------------|---------------------|
+| 1  | 1       | NULL         | 123.45 | deposit          | 2025-02-03 11:11:11 |
+| 2  | 1       | 2            | 12.34  | transfer         | 2025-02-04 12:12:12 |
+| 3  | 1       | NULL         | 12.34  | deposit          | 2025-02-04 13:13:13 |
+| 4  | 2       | 1            | 12.33  | transfer         | 2025-02-04 14:14:14 |

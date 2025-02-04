@@ -69,14 +69,44 @@ func (u *userHandler) Deposit(c *gin.Context) {
 }
 
 func (u *userHandler) Transfer(c *gin.Context) {
-	senderID, err := strconv.Atoi(c.Param("user_id"))
+	// Get userID
+	userID, err := strconv.Atoi(c.Param("user_id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user_id"})
 		return
 	}
-	if senderID <= 0 {
+	if userID <= 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id should be greater than zero"})
 		return
 	}
 
+	// Get amount and recipient user_id
+	transferDTO := dto.TransferDTO{}
+	if err := c.ShouldBindJSON(&transferDTO); err != nil {
+		c.JSON(400, gin.H{"error": "Invalid request"})
+		return
+	}
+	if transferDTO.Amount.Sign() <= 0 {
+		c.JSON(400, gin.H{"error": "Amount should be greater than zero"})
+		return
+	}
+	if transferDTO.RecipientUserID <= 0 {
+		c.JSON(400, gin.H{"error": "recipient user_id should be greater than zero"})
+		return
+	}
+
+	// Prepare transactionusecase.TransferDTO
+	useCaseDTO := userusecase.TransferDTO{
+		SenderUserID:    userID,
+		Amount:          transferDTO.Amount,
+		RecipientUserID: transferDTO.RecipientUserID,
+	}
+
+	data, err := u.userUseCase.Transfer(context.Background(), useCaseDTO)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": data})
 }

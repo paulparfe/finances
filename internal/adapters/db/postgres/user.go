@@ -68,5 +68,62 @@ func (s userStorage) Deposit(dto userusecase.DepositDTO) (*entity.User, error) {
 }
 
 func (s userStorage) Transfer(dto userusecase.TransferDTO) (*entity.User, error) {
-	return nil, nil
+	user := &entity.User{}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	tx, err := s.client.BeginTx(ctx, pgx.TxOptions{IsoLevel: pgx.RepeatableRead})
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
+
+	query := `
+		INSERT INTO transactions (user_id, recipient_id, amount, transaction_type, created_at)
+		VALUES ($1, $2, $3, 'transfer', $4);
+		`
+	args := []any{dto.SenderUserID, dto.RecipientUserID, dto.Amount, time.Now()}
+	_, err = tx.Exec(ctx, query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	query = `
+		UPDATE users
+		SET balance = balance - $1
+		WHERE id = $2
+		RETURNING id, name, balance;
+		`
+	args = []any{dto.Amount, dto.SenderUserID}
+	err = tx.QueryRow(ctx, query, args...).Scan(&user.ID, &user.Name, &user.Balance)
+	if err != nil {
+		return nil, err
+	}
+
+	if user.Balance.Sign() < 0 {
+		return nil, errors.New("sorry, you don't have enough balance")
+	}
+
+	query = `
+		UPDATE users
+		SET balance = balance + $1
+		WHERE id = $2
+		`
+	args = []any{dto.Amount, dto.RecipientUserID}
+	_, err = tx.Exec(ctx, query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "40001" {
+			return nil, errors.New("transaction failed due to serialization conflict, please retry")
+		}
+		return nil, err
+	}
+
+	return user, nil
 }
