@@ -1,4 +1,4 @@
-###### Starting the application and database containers
+#### Starting the application and database containers
 ```shell
 make run
 ```
@@ -21,9 +21,9 @@ Table `transactions`
 | 2   | 1       | 2            | 12.34  | transfer         | 2025-02-04 12:12:12 |
 
 
-###### Operations
+#### Operations
 
-- Checking the last 10 transactions of a user
+###### Checking the last 10 transactions of a user
 http://localhost:8080/users/1/transactions
 
 ```json
@@ -50,11 +50,11 @@ http://localhost:8080/users/1/transactions
 ```
 
 
-- Refill Adam's account for 12.34
+###### Refill Adam's account for 12.34
 ```shell
 $ curl -X POST http://localhost:8080/users/1/deposit -H "Content-Type: application/json" -d "{\"amount\": 12.34}"
-{"data":{"id":1,"name":"Adam","balance":"123.45"}}
 ```
+`{"data":{"id":1,"name":"Adam","balance":"123.45"}}`
 
 The new values will be as follows:
 
@@ -70,11 +70,12 @@ The new values will be as follows:
 | 3  | 1       | NULL         | 12.34  | deposit          | 2025-02-04 13:13:13 |
 
 
-- Diana is transferring 12.33 to Adam 
+###### Diana is transferring 12.33 to Adam 
 ```shell
 curl -X POST http://localhost:8080/users/2/transfer -H "Content-Type: application/json" -d "{\"recipient_user_id\": 1,\"amount\": 12.33}"
-{"data":{"id":2,"name":"Diana","balance":"0.01"}}
 ```
+`{"data":{"id":2,"name":"Diana","balance":"0.01"}}`
+
 The new values will be as follows:
 
 | id  | name  | balance |
