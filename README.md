@@ -30,7 +30,7 @@ http://localhost:8080/users/1/transactions
 {
   "data": [
     {
-      "ID": 0,
+      "ID": 2,
       "UserID": 1,
       "RecipientID": 2,
       "Amount": "12.34",
@@ -38,7 +38,7 @@ http://localhost:8080/users/1/transactions
       "CreatedAt": "2025-02-04T12:12:12Z"
     },
     {
-      "ID": 0,
+      "ID": 1,
       "UserID": 1,
       "RecipientID": null,
       "Amount": "123.45",

@@ -19,7 +19,7 @@ func NewTransactionStorage(client postgresql.Client) transactionStorage {
 
 func (s transactionStorage) History(userID int) ([]entity.Transaction, error) {
 	query := `
-        SELECT user_id, recipient_id, amount, transaction_type, created_at
+        SELECT id, user_id, recipient_id, amount, transaction_type, created_at
         FROM transactions
         WHERE user_id = $1
         ORDER BY id DESC
@@ -40,6 +40,7 @@ func (s transactionStorage) History(userID int) ([]entity.Transaction, error) {
 		var transaction entity.Transaction
 
 		err = rows.Scan(
+			&transaction.ID,
 			&transaction.UserID,
 			&transaction.RecipientID,
 			&transaction.Amount,
