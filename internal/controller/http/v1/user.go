@@ -48,10 +48,6 @@ func (u *userHandler) Deposit(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "Invalid request"})
 		return
 	}
-	if controllerDTO.Amount.Sign() <= 0 {
-		c.JSON(400, gin.H{"error": "Amount should be greater than zero"})
-		return
-	}
 
 	// Prepare transactionusecase.HistoryDTO
 	useCaseDTO := userusecase.DepositDTO{
@@ -75,23 +71,11 @@ func (u *userHandler) Transfer(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user_id"})
 		return
 	}
-	if userID <= 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id should be greater than zero"})
-		return
-	}
 
 	// Get amount and recipient user_id
 	transferDTO := dto.TransferDTO{}
 	if err := c.ShouldBindJSON(&transferDTO); err != nil {
 		c.JSON(400, gin.H{"error": "Invalid request"})
-		return
-	}
-	if transferDTO.Amount.Sign() <= 0 {
-		c.JSON(400, gin.H{"error": "Amount should be greater than zero"})
-		return
-	}
-	if transferDTO.RecipientUserID <= 0 {
-		c.JSON(400, gin.H{"error": "recipient user_id should be greater than zero"})
 		return
 	}
 

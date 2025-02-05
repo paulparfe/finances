@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"github.com/paulparfe/finances/internal/domain/entity"
 )
 
@@ -20,5 +21,9 @@ func NewTransactionService(storage TransactionStorage) transactionService {
 }
 
 func (s transactionService) History(ctx context.Context, userID int) ([]entity.Transaction, error) {
+	if userID <= 0 {
+		return nil, errors.New("user_id should be greater than zero")
+	}
+
 	return s.storage.History(userID)
 }

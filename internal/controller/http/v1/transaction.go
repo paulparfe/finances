@@ -32,10 +32,6 @@ func (h *transactionHandler) UserHistory(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user_id"})
 		return
 	}
-	if userID <= 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id should be greater than zero"})
-		return
-	}
 
 	data, err := h.transactionUseCase.History(context.Background(), userID)
 	if err != nil {
