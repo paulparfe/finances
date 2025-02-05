@@ -1,4 +1,4 @@
-.PHONY: run stop migrate build
+.PHONY: run stop migrate build test
 
 run:
 	docker-compose up -d --build
@@ -14,3 +14,6 @@ migrate:
 
 build:
 	docker-compose build
+
+test:
+    go test -v ./...

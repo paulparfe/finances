@@ -93,3 +93,9 @@ The new values will be as follows:
 | 2  | 1       | 2            | 12.34  | transfer         | 2025-02-04 12:12:12 |
 | 3  | 1       | NULL         | 12.34  | deposit          | 2025-02-04 13:13:13 |
 | 4  | 2       | 1            | 12.33  | transfer         | 2025-02-04 14:14:14 |
+
+## Run tests
+
+```shell
+go test -v ./internal/domain/service
+```
