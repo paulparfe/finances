@@ -59,6 +59,6 @@ func TestHistory_InvalidUserID(t *testing.T) {
 
 	result, err := transactionService.History(context.Background(), 0)
 
-	assert.Error(t, err)
+	assert.Equal(t, "user_id should be greater than zero", err.Error())
 	assert.Nil(t, result)
 }
