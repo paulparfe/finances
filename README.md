@@ -55,7 +55,7 @@ Returns:
 #### Refill Adam's account for 12.34
 Request:
 ```shell
-$ curl -X POST http://localhost:8080/users/1/deposit -H "Content-Type: application/json" -d "{\"amount\": 12.34}"
+curl -X POST http://localhost:8080/users/1/deposit -H "Content-Type: application/json" -d "{\"amount\": 12.34}"
 ```
 Returns: `{"data":{"id":1,"name":"Adam","balance":"123.45"}}`
 
